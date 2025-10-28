@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dage Name Generator</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f6f7f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      color: #333;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      background: #0078ff;
+      color: white;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #005fd1;
+    }
+    .name {
+      font-size: 1.5em;
+      margin-top: 30px;
+      color: #111;
+    }
+  </style>
+</head>
+<body>
+  <h1>Random English Name Generator</h1>
+  <button id="generate">Generate</button>
+  <div class="name" id="output">Click “Generate” to start</div>
+
+  <script>
+    async function generate() {
+      const res = await fetch("/newname");
+      const text = await res.text();
+      document.getElementById("output").textContent = text.trim();
+    }
+
+    document.getElementById("generate").addEventListener("click", generate);
+  </script>
+</body>
+</html>
