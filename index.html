@@ -24,37 +24,51 @@
   <!-- header loaded dynamically by layouts.js -->
   <header id="header" class="w-full bg-white dark:bg-gray-900 border-b border-blue-200 dark:border-gray-700 py-4 px-6 shadow z-10"></header>
 
-  <main class="flex-1 flex items-center justify-center p-6">
-    <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl p-8 w-full max-w-md border border-blue-200 dark:border-gray-700">
-      <div class="flex justify-between items-center mb-6">
-        <h2 id="title" class="text-3xl font-extrabold text-blue-700 dark:text-blue-300 text-center w-full">🎲 Random Name Generator</h2>
-      </div>
+<main class="flex-1 flex items-center justify-center p-6">
+  <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl p-8 w-full max-w-md border border-blue-200 dark:border-gray-700">
+    <div class="flex justify-between items-center mb-6">
+      <h2 id="title" class="text-3xl font-extrabold text-blue-700 dark:text-blue-300 text-center w-full">
+        🎲 Da Random Name Generator
+      </h2>
+    </div>
 
-      <button id="generateBtn" class="w-full bg-primary hover:bg-accent text-white font-medium py-3 rounded-xl transition-all shadow-md">
+    <!-- Buttons -->
+    <div class="flex gap-2">
+      <button id="generateBtn" class="flex-1 bg-primary hover:bg-accent text-white font-medium py-3 rounded-xl transition-all shadow-md">
         Generate Name
       </button>
-
-      <div id="nameOutput" class="text-3xl font-semibold text-blue-700 dark:text-blue-300 text-center mt-8 bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 rounded-2xl p-6 shadow-inner">
-        Click “Generate Name” to start
-      </div>
+      <button id="copyBtn" class="bg-white dark:bg-gray-800 border border-primary text-primary hover:bg-blue-100 dark:hover:bg-gray-700 font-medium px-4 py-3 rounded-xl transition-all shadow-md">
+        📋
+      </button>
     </div>
-  </main>
+
+    <!-- Name output -->
+    <div id="nameOutput" class="text-3xl font-semibold text-blue-700 dark:text-blue-300 text-center mt-8 bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 rounded-2xl p-6 shadow-inner">
+      Click “Generate Name” to start
+    </div>
+
+    <!-- Copy tip -->
+    <div id="copyTip" class="text-center text-green-600 dark:text-green-400 text-sm mt-4 hidden opacity-0 transition-opacity duration-500">
+      Name copied!
+    </div>
+  </div>
+</main>
+
 
   <!-- footer loaded dynamically by layouts.js -->
   <footer id="footer" class="w-full bg-white dark:bg-gray-900 border-t border-blue-200 dark:border-gray-700 py-6 px-4 text-center text-sm text-gray-500 dark:text-gray-400"></footer>
 
   <!-- shared layout loader -->
   <script src="/layouts.js"></script>
-
+  
 <script>
-  // Language texts (page-level only)
   const texts = {
-    en: { title: "🎲 Da Random Name Generator", button: "Generate Name", placeholder: "Click 'Generate Name' to start" },
-    zh: { title: "🎲 Da 随机姓名生成器", button: "生成姓名", placeholder: "点击“生成姓名”开始" },
-    es: { title: "🎲 Da Generador de Nombres Aleatorios", button: "Generar Nombre", placeholder: "Haz clic en 'Generar Nombre' para empezar" },
-    fr: { title: "🎲 Da Générateur de Noms Aléatoires", button: "Générer un Nom", placeholder: "Cliquez sur 'Générer un Nom' pour commencer" },
-    de: { title: "🎲 Da Zufälliger Namensgenerator", button: "Namen generieren", placeholder: "Klicke auf 'Namen generieren', um zu starten" },
-    ja: { title: "🎲 Da ランダム名前ジェネレーター", button: "名前を生成", placeholder: "「名前を生成」をクリックして開始" }
+    en: { title: "🎲 Da Random Name Generator", button: "Generate Name", placeholder: "Click 'Generate Name' to start", copied: "Name copied!" },
+    zh: { title: "🎲 Da 随机姓名生成器", button: "生成姓名", placeholder: "点击“生成姓名”开始", copied: "姓名已复制！" },
+    es: { title: "🎲 Da Generador de Nombres Aleatorios", button: "Generar Nombre", placeholder: "Haz clic en 'Generar Nombre' para empezar", copied: "¡Nombre copiado!" },
+    fr: { title: "🎲 Da Générateur de Noms Aléatoires", button: "Générer un Nom", placeholder: "Cliquez sur 'Générer un Nom' pour commencer", copied: "Nom copié !" },
+    de: { title: "🎲 Da Zufälliger Namensgenerator", button: "Namen generieren", placeholder: "Klicke auf 'Namen generieren', um zu starten", copied: "Name kopiert!" },
+    ja: { title: "🎲 Da ランダム名前ジェネレーター", button: "名前を生成", placeholder: "「名前を生成」をクリックして開始", copied: "名前をコピーしました！" }
   };
 
   let currentLang = language || 'en';
@@ -71,7 +85,6 @@
     applyLanguage();
   });
 
-  // React to global language change event (from header)
   function eventLanguageChanged(lang) {
     currentLang = lang;
     applyLanguage();
@@ -79,13 +92,31 @@
 
   // Fetch random name
   document.addEventListener('DOMContentLoaded', () => {
+    const nameOutput = document.getElementById('nameOutput');
+    const copyTip = document.getElementById('copyTip');
+
     document.getElementById('generateBtn').addEventListener('click', async () => {
       const res = await fetch(`/newname`);
       const name = await res.text();
-      document.getElementById('nameOutput').textContent = name.trim();
+      nameOutput.textContent = name.trim();
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      const text = nameOutput.textContent.trim();
+      if (!text || text.includes('Generate')) return;
+
+      await navigator.clipboard.writeText(text);
+      copyTip.textContent = t.copied;
+      copyTip.classList.remove('hidden');
+      copyTip.style.opacity = '1';
+      setTimeout(() => {
+        copyTip.style.opacity = '0';
+        setTimeout(() => copyTip.classList.add('hidden'), 500);
+      }, 2000);
     });
   });
 </script>
+
 
 </body>
 </html>
