@@ -1,3 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Random Name Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: '#3b82f6',
+            accent: '#1e40af'
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-gradient-to-tr from-blue-100 via-white to-blue-200 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 min-h-screen flex flex-col font-sans transition-all">
+
+  <!-- header loaded dynamically by layouts.js -->
+  <header id="header" class="w-full bg-white dark:bg-gray-900 border-b border-blue-200 dark:border-gray-700 py-4 px-6 shadow z-10"></header>
+
+  <main class="flex-1 flex items-center justify-center p-6">
+    <div class="bg-white dark:bg-gray-900 rounded-3xl shadow-2xl p-8 w-full max-w-md border border-blue-200 dark:border-gray-700">
+      <div class="flex justify-between items-center mb-6">
+        <h2 id="title" class="text-3xl font-extrabold text-blue-700 dark:text-blue-300 text-center w-full">🎲 Random Name Generator</h2>
+      </div>
+
+      <button id="generateBtn" class="w-full bg-primary hover:bg-accent text-white font-medium py-3 rounded-xl transition-all shadow-md">
+        Generate Name
+      </button>
+
+      <div id="nameOutput" class="text-3xl font-semibold text-blue-700 dark:text-blue-300 text-center mt-8 bg-blue-50 dark:bg-gray-800 border border-blue-200 dark:border-gray-700 rounded-2xl p-6 shadow-inner">
+        Click “Generate Name” to start
+      </div>
+    </div>
+  </main>
+
+  <!-- footer loaded dynamically by layouts.js -->
+  <footer id="footer" class="w-full bg-white dark:bg-gray-900 border-t border-blue-200 dark:border-gray-700 py-6 px-4 text-center text-sm text-gray-500 dark:text-gray-400"></footer>
+
+  <!-- shared layout loader -->
+  <script src="/layouts.js"></script>
+
 <script>
   // Language texts (page-level only)
   const texts = {
@@ -38,3 +86,6 @@
     });
   });
 </script>
+
+</body>
+</html>
