@@ -1,56 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dage Name Generator</title>
-  <style>
-    body {
-      font-family: system-ui, sans-serif;
-      background: #f6f7f9;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      color: #333;
-    }
-    button {
-      padding: 10px 20px;
-      border: none;
-      background: #0078ff;
-      color: white;
-      font-size: 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-    button:hover {
-      background: #005fd1;
-    }
-    .name {
-      font-size: 1.5em;
-      margin-top: 30px;
-      color: #111;
-    }
-  </style>
-</head>
-<body>
-  <h1>Random English Name Generator</h1>
-  <button id="generate">Generate</button>
-  <div class="name" id="output">Click “Generate” to start</div>
+<script>
+  // Language texts (page-level only)
+  const texts = {
+    en: { title: "🎲 Da Random Name Generator", button: "Generate Name", placeholder: "Click 'Generate Name' to start" },
+    zh: { title: "🎲 Da 随机姓名生成器", button: "生成姓名", placeholder: "点击“生成姓名”开始" },
+    es: { title: "🎲 Da Generador de Nombres Aleatorios", button: "Generar Nombre", placeholder: "Haz clic en 'Generar Nombre' para empezar" },
+    fr: { title: "🎲 Da Générateur de Noms Aléatoires", button: "Générer un Nom", placeholder: "Cliquez sur 'Générer un Nom' pour commencer" },
+    de: { title: "🎲 Da Zufälliger Namensgenerator", button: "Namen generieren", placeholder: "Klicke auf 'Namen generieren', um zu starten" },
+    ja: { title: "🎲 Da ランダム名前ジェネレーター", button: "名前を生成", placeholder: "「名前を生成」をクリックして開始" }
+  };
 
-  <script>
-    async function generate() {
-      const res = await fetch("/newname");
-      const text = await res.text();
-      document.getElementById("output").textContent = text.trim();
-    }
+  let currentLang = language || 'en';
+  let t = texts[currentLang] || texts.en;
 
-    document.getElementById("generate").addEventListener("click", generate);
-  </script>
-</body>
-</html>
+  function applyLanguage() {
+    t = texts[currentLang] || texts.en;
+    document.getElementById('title').textContent = t.title;
+    document.getElementById('generateBtn').textContent = t.button;
+    document.getElementById('nameOutput').textContent = t.placeholder;
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    applyLanguage();
+  });
+
+  // React to global language change event (from header)
+  function eventLanguageChanged(lang) {
+    currentLang = lang;
+    applyLanguage();
+  }
+
+  // Fetch random name
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('generateBtn').addEventListener('click', async () => {
+      const res = await fetch(`/newname`);
+      const name = await res.text();
+      document.getElementById('nameOutput').textContent = name.trim();
+    });
+  });
+</script>
