@@ -1,5 +1,5 @@
-import firstData from "../../data/first.txt";
-import familyData from "../../data/family.txt";
+import firstData from "../data/first.txt";
+import familyData from "../data/family.txt";
 
 export async function onRequest(context) {
   const width = 16;
